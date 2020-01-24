@@ -1,0 +1,84 @@
+<canvas width="600" height="400"></canvas>
+<script>
+	var tela = document.querySelector('canvas');
+	var pincel = tela.getContext('2d');
+
+	pincel.fillStyle = 'lightgray';
+	pincel.fillRect(0, 0, 600, 400);
+
+	var raio = 10;
+	var xAleatorio;
+	var yAleatorio;
+	var pontos = 0;
+	
+	function desenhaCirculo(x, y, raio, cor) {
+
+		pincel.fillStyle = cor;
+		pincel.beginPath();
+		pincel.arc(x, y, raio, 0, 2 * Math.PI);
+		pincel.fill();
+	};
+
+	function limpaTela() {
+
+		pincel.clearRect(0, 0, 600, 400);
+
+	};
+
+	function desenhaAlvo(x,y) {
+
+		desenhaCirculo(x, y, raio+20, 'red');
+		desenhaCirculo(x, y, raio+10, 'white');
+		desenhaCirculo(x, y, raio, 'red');
+
+	};
+
+	function sorteiaPosicao(maximo) {
+
+		return Math.floor(Math.random() * maximo);
+
+	};
+
+	function atualizaTela() {
+		limpaTela();
+		xAleatorio = sorteiaPosicao(600);
+		yAleatorio = sorteiaPosicao(400);
+		desenhaAlvo(xAleatorio, yAleatorio);
+	};
+
+	setInterval(atualizaTela, 1500);
+	
+	function mouseNoAlvo (evento){
+		var xMouse = evento.pageX - tela.offsetLeft;
+		var yMouse = evento.pageY - tela.offsetTop;
+		
+		if((xMouse > xAleatorio - raio)
+		&& (xMouse < xAleatorio + raio)
+		&& (yMouse > yAleatorio - raio)
+		&& (yMouse < yAleatorio + raio)){
+			gatilho();
+			alert('Acertou! ' + pontos);
+			pontos++
+		};
+			
+	};
+	
+	function gatilho(){
+		if(pontos<5){
+			alert('Acertou com Revolver!');
+		};
+		if(pontos>=5 && pontos<=15){
+			raio = (raio*2);
+			alert('Acertou com Escopeta!');
+		};
+		if(pontos>15){
+			alert('Acertou com Rifle!');
+			raio = (raio*3);
+		};
+	};
+
+	tela.onclick = mouseNoAlvo;
+
+
+
+</script>
